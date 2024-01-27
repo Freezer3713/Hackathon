@@ -9,8 +9,8 @@ def prof_rating(prof_name):
     print(professor.difficulty)
     print(professor.rating)
     
-    if x is not None:
-        print("%sworks in the %s Department of %s." % (professor, professor.department, professor.school.name))
+    if professor is not None:
+        print("%s works in the %s Department of %s." % (professor, professor.department, professor.school.name))
         print("Rating: %s / 5.0" % professor.rating)
         print("Difficulty: %s / 5.0" % professor.difficulty)
         print("Total Ratings: %s" % professor.num_ratings)
