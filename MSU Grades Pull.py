@@ -18,7 +18,7 @@ def get_course_info(subject, class_code):
     average_grade = numeric_grades.mean()
 
     # Get other relevant information (course title and instructors)
-    course_title = course_info['COURSE_TITLE_DESCR'].iloc[0]  # Assuming it's the same for all sections
+    course_title = course_info['COURSE_TITLE_DESCR'].iloc[0]  
     instructors = course_info['INSTRUCTOR'].unique()
 
     # Return the information
@@ -43,4 +43,13 @@ subject = 'CSE'
 class_code = '260'
 
 course_info = get_course_info(subject, class_code)
-print_course_info(course_info)
+course_title = course_info['COURSE_TITLE_DESCR']
+instructors = course_info['INSTRUCTORS']
+average_grade = course_info['AVERAGE_GRADE']
+
+# Now you can refer to the instructor names using the 'instructors' variable
+print(f"Course Title: {course_title}")
+print("Instructors:")
+for instructor in instructors:
+    print(f"  - {instructor}")
+print(f"Average Grade: {average_grade}")
