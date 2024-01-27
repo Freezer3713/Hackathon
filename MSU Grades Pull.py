@@ -19,13 +19,15 @@ def get_course_info(subject, class_code):
 
     # Get other relevant information (course title and instructors)
     course_title = course_info['COURSE_TITLE_DESCR'].iloc[0]  
-    instructors = course_info['INSTRUCTOR'].unique()
+    instructors_str = course_info['INSTRUCTOR'].iloc[0]  
+
+    # Split instructors into a list if there are multiple instructors
+    instructors = [instructor.strip() for instructor in instructors_str.split('|')]
 
     # Return the information
     return {
         'COURSE_TITLE_DESCR': course_title,
         'INSTRUCTORS': instructors,
-        'AVERAGE_GRADE': average_grade
     }
 
 def print_course_info(course_info):
@@ -36,7 +38,7 @@ def print_course_info(course_info):
         print("Instructors:")
         for instructor in course_info['INSTRUCTORS']:
             print(f"  - {instructor}")
-        print(f"Average Grade: {course_info['AVERAGE_GRADE']}")
+        
 
 # Example usage
 subject = 'CSE'
@@ -45,11 +47,10 @@ class_code = '260'
 course_info = get_course_info(subject, class_code)
 course_title = course_info['COURSE_TITLE_DESCR']
 instructors = course_info['INSTRUCTORS']
-average_grade = course_info['AVERAGE_GRADE']
 
-# Now you can refer to the instructor names using the 'instructors' variable
+# Now you can refer to the instructor names using the 'instructors' list
 print(f"Course Title: {course_title}")
 print("Instructors:")
 for instructor in instructors:
     print(f"  - {instructor}")
-print(f"Average Grade: {average_grade}")
+
