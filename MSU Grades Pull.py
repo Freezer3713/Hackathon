@@ -1,8 +1,7 @@
 import pandas as pd
 
-file_path = 'MSU_Grades.csv'
+file_path = '/Users/afnanrahman/Hackathon/MSU_Grades.csv'
 df = pd.read_csv(file_path)
-
 
 def get_course_info(subject, class_code):
     # Filter the DataFrame based on the given parameters
@@ -29,9 +28,19 @@ def get_course_info(subject, class_code):
         'AVERAGE_GRADE': average_grade
     }
 
-    # Example usage
+def print_course_info(course_info):
+    if isinstance(course_info, str):
+        print(course_info)
+    else:
+        print(f"Course Title: {course_info['COURSE_TITLE_DESCR']}")
+        print("Instructors:")
+        for instructor in course_info['INSTRUCTORS']:
+            print(f"  - {instructor}")
+        print(f"Average Grade: {course_info['AVERAGE_GRADE']}")
+
+# Example usage
 subject = 'CSE'
-class_code = '102'
+class_code = '260'
 
 course_info = get_course_info(subject, class_code)
-print(course_info)
+print_course_info(course_info)
