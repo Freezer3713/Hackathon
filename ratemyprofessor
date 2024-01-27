@@ -1,4 +1,6 @@
 import ratemyprofessor
+import requests
+from bs4 import BeautifulSoup
 
 msu = ratemyprofessor.get_school_by_name("Michigan State University")
 x = ratemyprofessor.get_professor_by_school_and_name(msu, "Plaga") 
@@ -14,3 +16,18 @@ if x is not None:
         print(("Would Take Again: %s" % round(professor.would_take_again, 1)) + '%')
     else:
         print("Would Take Again: N/A")
+
+
+def get_grade_data(course_name):
+    
+    # Get specific URL for specifc course
+    url = f'https://msugrades.com/courses/{course_name}/instructors'
+    
+    # Send HTTP request to the URL
+    response = requests.get(url)
+    response.raise_for_status()
+    
+    soup = BeautifulSoup(response.content, 'html.parser')
+    results = soup.find(id="grade-summary")
+    grade = results.find('p')
+    return grade
