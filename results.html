@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <!-- Add any additional styles or links you may need -->
+</head>
+<body>
+    <h1>Search Results</h1>
+
+    <div id="courseInfo">
+        <h2>Course Information</h2>
+        <p id="courseTitle">Course Title: </p>
+        <ul id="instructorsList">
+            <li>Instructors:</li>
+        </ul>
+    </div>
+
+    <div id="gradeInfo">
+        <h2>Grade Information</h2>
+        <p id="averageGrade">Average Grade: </p>
+        <p id="medianGrade">Median Grade: </p>
+    </div>
+
+    <div id="profRatingInfo">
+        <h2>Professor Rating</h2>
+        <p id="profRating">Professor Rating: </p>
+        <p id="difficulty">Difficulty: </p>
+    </div>
+
+    <!-- Add any other content you want to display -->
+
+    <a href="/">Go back to home</a> <!-- Link to go back to the home page -->
+
+    <!-- Include external JavaScript files -->
+    <script src="{{ url_for('static', filename='./scripts/results.js') }}"></script>
+</body>
+</html>
