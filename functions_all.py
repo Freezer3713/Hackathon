@@ -39,7 +39,7 @@ def get_grade_data(course_name):
 
 
 def get_course_info(subject, class_code):
-    file_path = '/Users/jordansebagh/Downloads/Hackathon/msu_grades.csv'
+    file_path = '/Users/afnanrahman/Hackathon/Msu_Grades.csv'
     df = pd.read_csv(file_path)
     # Filter the DataFrame based on the given parameters
     course_info = df[(df['SUBJECT'] == subject) & (df['CRSE_CODE'] == class_code)]
@@ -97,5 +97,5 @@ def main():
         prof_rating(instructor)
         
 
-
-main()
+if __name__ == '__main__':
+    main()
