@@ -2,27 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content= "IE=edge">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='./style.css') }}">
 </head>
 <body>
     <div class="logo">
-        <img src="../Hackathon/thespartan.jpg">
+        <img src="{{ url_for('static', filename='./thespartan.jpg') }}">
     </div>
-    <a href="Hackathon.html">
+    <a href="{{ url_for('static', filename='./Hackathon.html') }}">
         <div class="logo second-logo">
-            <img src="../Hackathon/greenhouse.jpg">
+            <img src="{{ url_for('static', filename='./greenhouse.jpg') }}">
         </div>
     </a>
+    
     <div class="search-container">
         <input type="text" id="searchBar" placeholder="Search...">
-        <button onclick="findStringInCSV()">Search</button>
+        <button onclick="search()">Search</button>
     </div>
-    <div class="csv-search-container">
-        <input type="file" id="csvFile" accept=".csv">
-        <button onclick="uploadAndSearch()">Upload and Search CSV</button>
-    </div>
+
     <main>
         <nav>
             <div class="nav-links">
@@ -33,94 +31,165 @@
         </nav>
         <div class="information">
             <div class="overlay"></div>
-            <img src="../Hackathon/sparty.jpg" class="mobile">
+            <img src="{{ url_for('static', filename='./sparty.jpg') }}" class="mobile">
             <div id="circle"> 
                 <div class="feature one">
-                    <img src="../Hackathon/processor.png">
+                    <img src="{{ url_for('static', filename='./processor.png') }}">
                 </div>
                 <div class="feature two">
-                    <img src="../Hackathon/camera.png">
+                    <img src="{{ url_for('static', filename='./camera.png') }}">
                 </div>
                 <div class="feature three">
-                    <img src="../Hackathon/display.png">
+                    <img src="{{ url_for('static', filename='./display.png') }}">
                 </div>
                 <div class="feature four">
-                    <img src="../Hackathon/battery.png">
+                    <img src="{{ url_for('static', filename='./battery.png') }}">
                 </div>
             </div>
         </div>
         <div class="controls">
-            <img src="../Hackathon/arrow.png" id="upBtn">
+            <img src="{{ url_for('static', filename='./arrow.png') }}" id="upBtn">
             <h3>Features</h3>
-            <img src="../Hackathon/arrow.png" id="downBtn">
-            
+            <img src="{{ url_for('static', filename='./arrow.png') }}" id="downBtn">
         </div>
     </main>
+    
     <script>
-        var circle = document.getElementById("circle");
-        var upBtn = document.getElementById("upBtn");
-        var downBtn = document.getElementById("downBtn"); // This was mistakenly 'var circle = document.getElementById("downBtn");'
-        var rotateValue = circle.style.transform;
-        var rotateSum;
+        document.addEventListener('DOMContentLoaded', function () {
+            var circle = document.getElementById("circle");
+            var upBtn = document.getElementById("upBtn");
+            var downBtn = document.getElementById("downBtn");
+            var rotateValue = circle.style.transform;
+            var rotateSum;
 
-        upBtn.onclick = function() {
-            rotateSum = rotateValue + "rotate(-90deg)";
-            circle.style.transform = rotateSum;
-            rotateValue = rotateSum;
-        }
+            upBtn.onclick = function() {
+                rotateSum = rotateValue + "rotate(-90deg)";
+                circle.style.transform = rotateSum;
+                rotateValue = rotateSum;
+            }
 
-        downBtn.onclick = function() {
-            rotateSum = rotateValue + "rotate(90deg)";
-            circle.style.transform = rotateSum;
-            rotateValue = rotateSum;
-        }
-
+            downBtn.onclick = function() {
+                rotateSum = rotateValue + "rotate(90deg)";
+                circle.style.transform = rotateSum;
+                rotateValue = rotateSum;
+            }
+        });
     </script>
+
+<script>
+    function search() {
+        var searchTerm = document.getElementById("searchBar").value;
+
+        // Call the Flask API to get course information
+        fetch(`/api/get_course_info/${searchTerm}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                // Dynamically set these values based on user input
+                subject: searchTerm,  
+                class_code: searchTerm,  
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Update the UI with the retrieved data
+            console.log(data);
+
+            // Example: Assuming there is an HTML element with id 'courseInfo' to display the result
+            document.getElementById('courseInfo').innerHTML = `
+                <p>Course Title: ${data.COURSE_TITLE_DESCR}</p>
+                <p>Instructors: ${data.INSTRUCTORS.join(', ')}</p>
+            `;
+
+            // Now make additional API calls for average and median grades, and professor ratings
+            fetch('/api/get_grade_data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    // Dynamically set these values based on user input
+                    course_name: searchTerm,  
+                }),
+            })
+            .then(response => response.json())
+            .then(gradeData => {
+                // Example: Assuming there is an HTML element with id 'gradeInfo' to display the result
+                document.getElementById('gradeInfo').innerHTML = `
+                    <p>Average Grade: ${gradeData.AVERAGE_GRADE}</p>
+                    <p>Median Grade: ${gradeData.MEDIAN_GRADE}</p>
+                `;
+            })
+            .catch(error => console.error('Error fetching grade data:', error));
+
+            // Assuming there is at least one instructor
+            fetch(`/api/prof_rating/${data.INSTRUCTORS[0]}`)  
+            .then(response => response.json())
+            .then(profRating => {
+                // Example: Assuming there is an HTML element with id 'profRatingInfo' to display the result
+                document.getElementById('profRatingInfo').innerHTML = `
+                    <p>Professor Rating: ${profRating.RATING}</p>
+                    <p>Difficulty: ${profRating.DIFFICULTY}</p>
+                `;
+            })
+            .catch(error => console.error('Error fetching professor rating:', error));
+
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
+
     <script>
-    function uploadAndSearch() {
-    var fileInput = document.getElementById('csvFile');
-    var searchTerm = document.getElementById("searchBar").value;
-    var reader = new FileReader();
+        function uploadAndSearch() {
+            var fileInput = document.getElementById('csvFile');
+            var searchTerm = document.getElementById("searchBar").value;
+            var reader = new FileReader();
 
-    reader.onload = function(e) {
-        console.log("File content type:", typeof e.target.result); // Debugging: Check file content type
-        var text = e.target.result;
-        console.log("Search term type:", typeof searchTerm); // Debugging: Check search term type
-        var foundLines = findStringInCSV(text, searchTerm);
+            reader.onload = function(e) {
+                console.log("File content type:", typeof e.target.result); // Debugging: Check file content type
+                var text = e.target.result;
+                console.log("Search term type:", typeof searchTerm); // Debugging: Check search term type
+                var foundLines = findStringInCSV(text, searchTerm);
 
-        // Process or display foundLines here
-        console.log("Found lines:", foundLines);
-    };
+                // Process or display foundLines here
+                console.log("Found lines:", foundLines);
+            };
 
-    reader.onerror = function(e) {
-        console.error("Error reading file:", e);
-    };
+            reader.onerror = function(e) {
+                console.error("Error reading file:", e);
+            };
 
-    if (fileInput.files.length > 0) {
-        reader.readAsText(fileInput.files[0]);
-    } else {
-        alert('Please select a CSV file to upload.');
-    }
-}
-
-function findStringInCSV(csvContent, searchString) {
-    if (typeof csvContent !== 'string' || typeof searchString !== 'string') {
-        console.error('Invalid input: csvContent and searchString should be strings');
-        return [];
-    }
-
-    const normalizedSearchString = searchString.trim().toLowerCase();
-    const lines = csvContent.split(/\r\n|\n|\r/);
-    let foundLines = [];
-
-    for (let line of lines) {
-        if (typeof line === 'string' && line.trim().toLowerCase().includes(normalizedSearchString)) {
-            foundLines.push(line);
+            if (fileInput.files.length > 0) {
+                reader.readAsText(fileInput.files[0]);
+            } else {
+                alert('Please select a CSV file to upload.');
+            }
         }
-    }
 
-    return foundLines;
-}
+        function findStringInCSV(csvContent, searchString) {
+            if (typeof csvContent !== 'string' || typeof searchString !== 'string') {
+                console.error('Invalid input: csvContent and searchString should be strings');
+                return [];
+            }
+
+            const normalizedSearchString = searchString.trim().toLowerCase();
+            const lines = csvContent.split(/\r\n|\n|\r/);
+            let foundLines = [];
+
+            for (let line of lines) {
+                if (typeof line === 'string' && line.trim().toLowerCase().includes(normalizedSearchString)) {
+                    foundLines.push(line);
+                }
+            }
+
+            return foundLines;
+        }
     </script>
+    
+    <div id="courseInfo"></div>
+    <div id="gradeInfo"></div>
+    <div id="profRatingInfo"></div>
 </body>
 </html>
