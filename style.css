@@ -1,0 +1,197 @@
+*{
+    margin: 0; 
+    padding: 0;
+    font-family: sans-serif;
+}
+body {
+    margin: 10; /* Remove default margin */
+    padding: 10; /* Remove default padding */
+}
+main{ 
+    width: 100%;
+    height: 100vh; position: relative;
+    overflow: hidden;
+    background: linear-gradient(to left, #4b6e61, #ffffff);
+}
+nav{
+    width: 80%; 
+    position: sticky; 
+    margin: 20px auto;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+}
+
+.logo{
+    flex-basis: 20%;
+}
+.logo img{
+    width: 150px;
+}
+.nav-links{
+    flex: 1;
+    text-align: right;
+} 
+.nav-links ul li{
+    list-style: none;
+    display: inline-block;
+    margin: 0 20px;
+    }
+.nav-links ul li a{
+    color: #fff;
+    text-decoration: none
+}
+.search-container {
+    margin: 20px;
+    text-align: center;
+}
+
+#searchBar {
+    padding: 10px;
+    margin-right: 10px;
+    width: 300px; /* You can adjust the width as needed */
+    border: 1px solid #4b6e61;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px;
+    border: none;
+    background-color: #4b6e61;
+    color: rgb(255, 255, 255);
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+.container {
+    display: flex;
+    align-items: center; /* Vertically center the content */
+}
+
+.second-logo {
+    margin-left: 1434px; /* Add some spacing between the search bar and the second image */
+}
+.second-logo {
+    position: absolute; /* Keep the image positioned absolutely */
+    top: 0; /* Adjust this as needed */
+    right: 0; /* Align to the right edge of the page */
+    z-index: 10; /* Keep on top of other elements */
+    max-width: 78px; /* Maximum width */
+    max-height: 78px; /* Maximum height */
+}
+
+.second-logo img {
+    max-width: 78px; /* Set a maximum width for the image */
+    max-height: 78px; /* Set a maximum height for the image */
+    display: block; /* Remove extra space below the image */
+    
+}
+.information { 
+    width: 100px;
+    height: 100px;
+    position: absolute; 
+    top: 10%;
+    left: 20%;
+    transform: translate(-500%, -60%);
+}
+.overlay{
+    width: 0;
+    height: 0;
+    border-top: 500px solid rgb(255, 255, 255);
+    border-right: 500px solid transparent;
+    border-bottom: 500px solid rgb(255, 255, 255);
+    border-left: 500px solid rgb(255, 255, 255);
+    position: absolute;
+    left: 100%;
+    top: -50%;
+    z-index: 1;
+}
+
+#circle { 
+    width: 1000px;
+    height: 1000px;
+    position: absolute; 
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    /* background: #4b6e61; */
+    transform: rotate(0deg);
+    transition: 1s;
+}
+.feature img{
+    width: 70px; /* Adjust this value as needed to control the size */
+    display: block; /* This will remove any extra space around the image */
+}
+.feature{
+    position: absolute;
+    display: flex;
+    color: #fff;
+    z-index: 3;
+}
+.feature div{
+    margin-left: 30px;
+}
+.feature div p{
+    margin-top: 8px;
+}
+.one{
+    top: 420px;
+    right: 150px;
+    position: absolute;
+}
+.two{
+    top: 150px;
+    left: 420px;
+    transform: rotate(-90deg);
+
+    position: absolute;
+}
+.three{
+    bottom: 410px;
+    left: 150px;
+    transform: rotate(-180deg);
+
+    position: absolute;
+}
+.four{
+    bottom: 135px;
+    right: 400px;
+    transform: rotate(-270deg);
+    position: absolute;
+}
+.mobile{
+    width: 350px;
+    position: absolute;
+    top: 300%;
+    left: 350%;
+    transform: translate (-50%);
+    z-index: 1;
+}
+.controls {
+    position: absolute;
+    right: 10%; /* Adjust as needed to line up with the up arrow */
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#upBtn {
+    width: 15px;
+    cursor: pointer;
+    /* Add any additional styling needed */
+}
+
+#downBtn {
+    width: 15px;
+    cursor: pointer;
+    position: absolute;
+    top: 60px; /* Adjust this value to shift the arrow down */
+    right: 64px; /* Align this with the up arrow */
+    transform: rotate(180deg);
+}
+.controls h3{
+margin: 10px 0;
+color: #fff
+}
