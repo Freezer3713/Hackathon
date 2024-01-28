@@ -53,143 +53,14 @@
             <img src="{{ url_for('static', filename='./arrow.png') }}" id="downBtn">
         </div>
     </main>
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var circle = document.getElementById("circle");
-            var upBtn = document.getElementById("upBtn");
-            var downBtn = document.getElementById("downBtn");
-            var rotateValue = circle.style.transform;
-            var rotateSum;
 
-            upBtn.onclick = function() {
-                rotateSum = rotateValue + "rotate(-90deg)";
-                circle.style.transform = rotateSum;
-                rotateValue = rotateSum;
-            }
-
-            downBtn.onclick = function() {
-                rotateSum = rotateValue + "rotate(90deg)";
-                circle.style.transform = rotateSum;
-                rotateValue = rotateSum;
-            }
-        });
-    </script>
-
-<script>
-    function search() {
-        var searchTerm = document.getElementById("searchBar").value;
-
-        // Call the Flask API to get course information
-        fetch(`/api/get_course_info/${searchTerm}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                // Dynamically set these values based on user input
-                subject: searchTerm,  
-                class_code: searchTerm,  
-            }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            // Update the UI with the retrieved data
-            console.log(data);
-
-            // Example: Assuming there is an HTML element with id 'courseInfo' to display the result
-            document.getElementById('courseInfo').innerHTML = `
-                <p>Course Title: ${data.COURSE_TITLE_DESCR}</p>
-                <p>Instructors: ${data.INSTRUCTORS.join(', ')}</p>
-            `;
-
-            // Now make additional API calls for average and median grades, and professor ratings
-            fetch('/api/get_grade_data', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    // Dynamically set these values based on user input
-                    course_name: searchTerm,  
-                }),
-            })
-            .then(response => response.json())
-            .then(gradeData => {
-                // Example: Assuming there is an HTML element with id 'gradeInfo' to display the result
-                document.getElementById('gradeInfo').innerHTML = `
-                    <p>Average Grade: ${gradeData.AVERAGE_GRADE}</p>
-                    <p>Median Grade: ${gradeData.MEDIAN_GRADE}</p>
-                `;
-            })
-            .catch(error => console.error('Error fetching grade data:', error));
-
-            // Assuming there is at least one instructor
-            fetch(`/api/prof_rating/${data.INSTRUCTORS[0]}`)  
-            .then(response => response.json())
-            .then(profRating => {
-                // Example: Assuming there is an HTML element with id 'profRatingInfo' to display the result
-                document.getElementById('profRatingInfo').innerHTML = `
-                    <p>Professor Rating: ${profRating.RATING}</p>
-                    <p>Difficulty: ${profRating.DIFFICULTY}</p>
-                `;
-            })
-            .catch(error => console.error('Error fetching professor rating:', error));
-
-        })
-        .catch(error => console.error('Error:', error));
-    }
-</script>
-
-    <script>
-        function uploadAndSearch() {
-            var fileInput = document.getElementById('csvFile');
-            var searchTerm = document.getElementById("searchBar").value;
-            var reader = new FileReader();
-
-            reader.onload = function(e) {
-                console.log("File content type:", typeof e.target.result); // Debugging: Check file content type
-                var text = e.target.result;
-                console.log("Search term type:", typeof searchTerm); // Debugging: Check search term type
-                var foundLines = findStringInCSV(text, searchTerm);
-
-                // Process or display foundLines here
-                console.log("Found lines:", foundLines);
-            };
-
-            reader.onerror = function(e) {
-                console.error("Error reading file:", e);
-            };
-
-            if (fileInput.files.length > 0) {
-                reader.readAsText(fileInput.files[0]);
-            } else {
-                alert('Please select a CSV file to upload.');
-            }
-        }
-
-        function findStringInCSV(csvContent, searchString) {
-            if (typeof csvContent !== 'string' || typeof searchString !== 'string') {
-                console.error('Invalid input: csvContent and searchString should be strings');
-                return [];
-            }
-
-            const normalizedSearchString = searchString.trim().toLowerCase();
-            const lines = csvContent.split(/\r\n|\n|\r/);
-            let foundLines = [];
-
-            for (let line of lines) {
-                if (typeof line === 'string' && line.trim().toLowerCase().includes(normalizedSearchString)) {
-                    foundLines.push(line);
-                }
-            }
-
-            return foundLines;
-        }
-    </script>
-    
     <div id="courseInfo"></div>
     <div id="gradeInfo"></div>
     <div id="profRatingInfo"></div>
+
+    <!-- Include external JavaScript files -->
+    <script src="{{ url_for('static', filename='./scripts/rotate.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/search.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/uploadAndSearch.js') }}"></script>
 </body>
 </html>
