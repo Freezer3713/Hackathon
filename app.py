@@ -1,8 +1,8 @@
 from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
-from all_functions import get_course_info, get_grade_data, prof_rating
+from all_functions import get_course_info, get_grade_data, prof_rating, print_course_info
 
-app = Flask(__name__, static_folder="./static")
+app = Flask(__name__, static_folder="./static", static_url_path="/static")
 CORS(app)
 
 @app.route('/')
@@ -29,6 +29,10 @@ def api_get_course_info():
     class_code = data.get('class_code')  # Adjust based on how you send data from frontend
     result = get_course_info(subject, class_code)
     return jsonify(result)
+
+@app.route('/results')
+def results():
+    return render_template('results.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
